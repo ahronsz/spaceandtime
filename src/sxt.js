@@ -8,8 +8,8 @@ let dateTime = new Date();
 
 const fields = process.env.FIELDS_S_PROJECTS
 const values = `(${2}, ${2}, ${2}, '${dateTime.toISOString().slice(0, -5)}')`
-const command = 'java -jar /home/ahronsz/Documents/tools/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="23ADAEA1C93FB4B40568079CBB42D2CF86286D96DEA0A737FADA0BDA8AE4D1FE" --resourceId=drex.solar_projects';
-//const command = 'java -jar /home/ubuntu/spaceandtime/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="23ADAEA1C93FB4B40568079CBB42D2CF86286D96DEA0A737FADA0BDA8AE4D1FE" --resourceId=drex.solar_projects';
+//const command = 'java -jar /home/ahronsz/Documents/tools/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="23ADAEA1C93FB4B40568079CBB42D2CF86286D96DEA0A737FADA0BDA8AE4D1FE" --resourceId=drex.solar_projects';
+const command = 'java -jar /home/ubuntu/spaceandtime/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="23ADAEA1C93FB4B40568079CBB42D2CF86286D96DEA0A737FADA0BDA8AE4D1FE" --resourceId=drex.solar_projects';
 let biscuitToken;
 
 

@@ -1,5 +1,6 @@
 
 function checkUserIdFormat(userId) {
+  console.log("userId:" + userId)
   if (typeof userId !== 'string' && typeof userId !== 'number') {
     throw new Error(`User ID must be a string or a number, but got ${typeof userId}`);
   }
