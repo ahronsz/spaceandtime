@@ -18,6 +18,8 @@ function sleep(ms) {
 }
 
 async function auth() {
+    console.log("process.env.PRIVATEKEY: " + process.env.PRIVATEKEY)
+    console.log("process.env.PUBLICKEY: " + process.env.PUBLICKEY)
     let [data, error] = await initSDK.Authenticate(process.env.PRIVATEKEY, process.env.PUBLICKEY);
     if (error) {
         console.log(error);
