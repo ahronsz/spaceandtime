@@ -1,33 +1,44 @@
 import express from 'express';
-import { get_last_recs_historical, get_rec_by_owner_name } from './src/sxt.js';
+import { get_last_recs_historical, get_rec_by_owner_name, generateGraphicByDeviceLabelAndTime } from './src/sxt.js';
 
 const app = express();
-const port = 3000;
+const port = 5000;
 
-// Página de inicio
 app.get('/recs-historical/last', async (req, res) => {
     try {
         const recsHistorical = await get_last_recs_historical();
-        console.log(recsHistorical[0]);
         res.send(recsHistorical[0]);
+        console.info("Data obtained satisfactorily");
     } catch (error) {
         console.error(error);
-        res.status(500).send('Hubo un error al obtener los registros.');
+        res.status(500).send('There was an error getting the logs.');
     }
 });
 
-// Ruta /saludo
 app.get('/recs/:ownerName', async (req, res) => {
     try {
         const recs = await get_rec_by_owner_name(req.params.ownerName);
-        console.log(recs[0]);
         res.send(recs[0]);
+        console.info("Data obtained satisfactorily");
     } catch (error) {
         console.error(error);
-        res.status(500).send('Hubo un error al obtener los registros.');
+        res.status(500).send('There was an error getting the logs.');
+    }
+});
+
+app.get('/energy/:deviceLabel/graphic?time=:time', async (req, res) => {
+    try {
+        const deviceLabel = req.params.deviceLabel;
+        const time = req.params.time;
+        const recs = await generateGraphicByDeviceLabelAndTime(deviceLabel, time);
+        res.send(recs);
+        console.info("Data obtained satisfactorily");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('There was an error getting the logs.');
     }
 });
 
 app.listen(port, () => {
-    console.log(`Servidor ejecutándose en http://localhost:${port}`);
+    console.log(`Server running on the port ${port}`);
 });

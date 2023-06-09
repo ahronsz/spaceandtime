@@ -8,8 +8,8 @@ let dateTime = new Date();
 
 const fields = process.env.FIELDS_S_PROJECTS
 const values = `(${2}, ${2}, ${2}, '${dateTime.toISOString().slice(0, -5)}')`
-//const command = 'java -jar /home/ahronsz/Documents/tools/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="23ADAEA1C93FB4B40568079CBB42D2CF86286D96DEA0A737FADA0BDA8AE4D1FE" --resourceId=drex.solar_projects';
-const command = 'java -jar /home/ubuntu/spaceandtime/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="23ADAEA1C93FB4B40568079CBB42D2CF86286D96DEA0A737FADA0BDA8AE4D1FE" --resourceId=drex.solar_projects';
+const command = 'java -jar /home/ahronsz/Documents/tools/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="23ADAEA1C93FB4B40568079CBB42D2CF86286D96DEA0A737FADA0BDA8AE4D1FE" --resourceId=drex.solar_projects';
+//const command = 'java -jar /home/ubuntu/spaceandtime/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="23ADAEA1C93FB4B40568079CBB42D2CF86286D96DEA0A737FADA0BDA8AE4D1FE" --resourceId=drex.solar_projects';
 let biscuitToken;
 
 
@@ -18,8 +18,6 @@ function sleep(ms) {
 }
 
 async function auth() {
-    console.log("process.env.PRIVATEKEY: " + process.env.PRIVATEKEY)
-    console.log("process.env.PUBLICKEY: " + process.env.PUBLICKEY)
     let [data, error] = await initSDK.Authenticate(process.env.PRIVATEKEY, process.env.PUBLICKEY);
     if (error) {
         console.log(error);
@@ -72,4 +70,9 @@ async function get_rec_by_owner_name(ownerName) {
     return dql("recs", `SELECT * FROM drex.recs WHERE owner_name = '${ownerName}'`);
 }
 
-export { get_last_recs_historical, get_rec_by_owner_name }
+async function generateGraphicByDeviceLabelAndTime(deviceLabel, time) {
+    await auth();
+    return dql("recs", `SELECT DATE_TRUNC(${time}, timestamp) AT TIME ZONE 'UTC' AS utc_date_time, MAX(energy_instant) AS energy FROM energy WHERE device_id = ${deviceLabel} GROUP BY utc_date_time ORDER BY utc_date_time`);
+}
+
+export { get_last_recs_historical, get_rec_by_owner_name, generateGraphicByDeviceLabelAndTime }
