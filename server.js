@@ -1,8 +1,11 @@
 import express from 'express';
+import cors from 'cors';
 import { get_last_recs_historical, get_rec_by_owner_name, generateGraphicByDeviceLabelAndTime } from './src/sxt.js';
 
 const app = express();
 const port = 5000;
+
+app.use(cors());
 
 app.get('/recs-historical/last', async (req, res) => {
     try {
