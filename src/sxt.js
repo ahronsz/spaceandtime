@@ -64,6 +64,11 @@ async function get_last_recs_historical() {
     return dql("recs", "SELECT * FROM drex.recs_historical ORDER BY creation_date_time DESC LIMIT 1");
 }
 
+async function get_recs_historical() {
+    await auth();
+    return dql("recs", "SELECT ISSUE_REQUEST_ID, ISSUE_REQUESTED, RECS_GENERATED, LISTED, SOLD, CREATION_DATE_TIME  FROM drex.recs_historical ORDER BY creation_date_time");
+}
+
 async function get_rec_by_owner_name(ownerName) {
     await auth();
     return dql("recs", `SELECT * FROM drex.recs WHERE owner_name = '${ownerName}'`);
@@ -74,4 +79,5 @@ async function generateGraphicByDeviceLabelAndTime(deviceLabel, time) {
     return dql("recs", `SELECT DATE_TRUNC(${time}, timestamp) AT TIME ZONE 'UTC' AS utc_date_time, MAX(energy_instant) AS energy FROM energy WHERE device_id = ${deviceLabel} GROUP BY utc_date_time ORDER BY utc_date_time`);
 }
 
-export { get_last_recs_historical, get_rec_by_owner_name, generateGraphicByDeviceLabelAndTime }
+
+export { get_last_recs_historical, get_rec_by_owner_name, get_recs_historical, generateGraphicByDeviceLabelAndTime }
