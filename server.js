@@ -26,7 +26,8 @@ app.get('/recs-historical/last', async (req, res) => {
 app.get('/recs-historical', async (req, res) => {
     try {
         const recsHistorical = await get_recs_historical();
-        res.send(recsHistorical);
+        const result = recsHistorical.filter(obj => obj.CREATION_DATE_TIME != '2023-06-06T13:39:27.000+00:00')
+        res.send(result);
         console.info("Data obtained satisfactorily");
     } catch (error) {
         console.error(error);
