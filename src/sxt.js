@@ -47,7 +47,6 @@ async function dql(table, sqlText) {
     }
 }
 
-
 exec(command, (error, stdout, stderr) => {
     if (error) {
         console.error(`Error ejecutando el comando: ${error.message}`);
