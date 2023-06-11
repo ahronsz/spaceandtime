@@ -99,5 +99,9 @@ async function send_energy_data(body) {
     return dml("energy", fieldsEnergy, values);
 }
 
+async function get_last_energy_by_device_id(deviceId) {
+    await auth();
+    return dql("energy", `SELECT * FROM drex.energy WHERE device_id = ${deviceId} ORDER BY datetime DESC LIMIT 1`);
+}
 
-export { get_last_recs_historical, get_rec_by_owner_name, get_recs_historical, send_energy_data, generateGraphicByDeviceLabelAndTime }
+export { get_last_recs_historical, get_rec_by_owner_name, get_recs_historical, send_energy_data, get_last_energy_by_device_id, generateGraphicByDeviceLabelAndTime }
