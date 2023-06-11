@@ -6,6 +6,7 @@ import {
     get_recs_historical,
     send_energy_data,
     get_last_energy_by_device_id,
+    get_energy_by_device_id,
     generateGraphicByDeviceLabelAndTime
 } from './src/sxt.js';
 
@@ -57,6 +58,12 @@ app.post('/energy', async (req, res) => {
     console.info("Data send satisfactorily");
 });
 
+app.get('/energy/:deviceId', async (req, res) => {
+    const energy = await get_energy_by_device_id(req.params.deviceId);
+    res.send(energy);
+    console.info("Data send satisfactorily");
+});
+
 app.get('/energy/:deviceId/last', async (req, res) => {
     try {
         const energy = await get_last_energy_by_device_id(req.params.deviceId);
@@ -67,7 +74,6 @@ app.get('/energy/:deviceId/last', async (req, res) => {
         res.status(500).send('There was an error getting the logs.');
     }
 });
-
 
 app.get('/energy/:deviceLabel/graphic?time=:time', async (req, res) => {
     try {

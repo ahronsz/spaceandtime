@@ -5,7 +5,6 @@ import { exec } from 'child_process';
 import { v1 as uuidv1 } from 'uuid';
 import SpaceAndTimeSDK from "./SpaceAndTimeSDK.js";
 const initSDK = SpaceAndTimeSDK.init();
-let dateTime = new Date();
 
 const fields = process.env.FIELDS_S_PROJECTS
 const fieldsEnergy = process.env.FIELDS_ENERGY
@@ -30,6 +29,7 @@ async function auth() {
 async function dml(table, fields, values) {
     const resourceId = `drex.${table}`
     const sqlText = `INSERT INTO drex.${table} ${fields} VALUES ${values}`
+    console.log(sqlText)
     let [data, error] = await initSDK.DML(resourceId, sqlText);
     if (error) {
         console.log(error);
@@ -81,7 +81,7 @@ async function generateGraphicByDeviceLabelAndTime(deviceLabel, time) {
 async function send_energy_data(body) {
     await auth();
     const energyId = uuidv1();
-    const deviceId = 1;
+    const deviceId = 3;
     const energyInstant = body.energyInstantMwh;
     const energyCummulative = body.energyCummulativeMwh;
     const voltageAb = body.voltageAb;
@@ -104,4 +104,17 @@ async function get_last_energy_by_device_id(deviceId) {
     return dql("energy", `SELECT * FROM drex.energy WHERE device_id = ${deviceId} ORDER BY datetime DESC LIMIT 1`);
 }
 
-export { get_last_recs_historical, get_rec_by_owner_name, get_recs_historical, send_energy_data, get_last_energy_by_device_id, generateGraphicByDeviceLabelAndTime }
+async function get_energy_by_device_id(deviceId) {
+    await auth();
+    return dql("energy", `SELECT * from drex.energy where device_id = '${deviceId}' ORDER BY datetime`);
+}
+
+export {
+    get_last_recs_historical,
+    get_rec_by_owner_name,
+    get_recs_historical,
+    send_energy_data,
+    get_last_energy_by_device_id,
+    get_energy_by_device_id,
+    generateGraphicByDeviceLabelAndTime
+}
