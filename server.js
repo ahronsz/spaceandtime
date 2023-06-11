@@ -7,6 +7,7 @@ import {
     send_energy_data,
     get_last_energy_by_device_id,
     get_energy_by_device_id,
+    save_recs_historical,
     generateGraphicByDeviceIdAndTime
 } from './src/sxt.js';
 
@@ -86,6 +87,14 @@ app.get('/energy/:deviceId/graphic', async (req, res) => {
         console.error(error);
         res.status(500).send('There was an error getting the logs.');
     }
+});
+
+app.post('/recs-historical', async (req, res) => {
+    const data = req.body;
+    console.log(data);
+    const recs = await save_recs_historical(data);
+    res.send(recs);
+    console.info("Data send satisfactorily");
 });
 
 app.listen(port, () => {

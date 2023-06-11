@@ -8,6 +8,7 @@ const initSDK = SpaceAndTimeSDK.init();
 
 const fields = process.env.FIELDS_S_PROJECTS
 const fieldsEnergy = process.env.FIELDS_ENERGY
+const fieldsRecsHistorical = process.env.FIELDS_H_RECS
 //const values = `(${2}, ${2}, ${2}, '${dateTime.toISOString().slice(0, -5)}')`
 const command = 'java -jar /home/ahronsz/Documents/tools/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="D9F662FCCBB81175EE3B16F65631D866632541E1FECE654620E9B677B71D46A6" --resourceId=drex.recs_historical';
 //const command = 'java -jar /home/ubuntu/spaceandtime/sxtcli-0.0.2.jar sql-support table-authz --accessType="PUBLIC_READ" --privateKey="23ADAEA1C93FB4B40568079CBB42D2CF86286D96DEA0A737FADA0BDA8AE4D1FE" --resourceId=drex.solar_projects';
@@ -99,6 +100,20 @@ async function send_energy_data(body) {
     return dml("energy", fieldsEnergy, values);
 }
 
+async function save_recs_historical(body) {
+    await auth();
+    const recHistoricalId = uuidv1();
+    const recId = body.rec_id;
+    const generated = body.issue_recs;
+    const issueRequestId = issue_id;
+    const issue_requested = body.request_recs;
+    const listed = 0;
+    const sold = 0;
+    const creationDateTime = curr_date;
+    const values = `('${recHistoricalId}', ${recId}, ${issueRequestId}, ${issue_requested}, ${generated}, ${listed}, ${sold}, '${creationDateTime}')`
+    return dml("recs_historical", fieldsRecsHistorical, values);
+}
+
 async function get_last_energy_by_device_id(deviceId) {
     await auth();
     return dql("energy", `SELECT ENERGY_INSTANT / 1000 as energyInstantMwh, ENERGY_CUMMULATIVE / 1000 as energyCummulativeMwh, VOLTAGE_AB as voltageAb, VOLTAGE_BC as voltageBc, VOLTAGE_CA as voltageCa, CURRENT_A as currentA, CURRENT_B as currentB, CURRENT_C as currentC, ACTIVE_POWER as activePower, REACTIVE_POWER as reactivePower, APARENT_POWER as aparentPower, POWER_FACTOR as powerFactor, DATETIME as utcDateTime FROM drex.energy WHERE device_id = ${deviceId} ORDER BY datetime DESC LIMIT 1`);
@@ -106,10 +121,7 @@ async function get_last_energy_by_device_id(deviceId) {
 
 async function get_energy_by_device_id(deviceId) {
     await auth();
-    //`ENERGY_INSTANT / 1000 as energyInstantMwh, ENERGY_CUMMULATIVE / 1000 as energyCummulativeMwh, VOLTAGE_AB as voltageAb, VOLTAGE_BC as voltageBc, VOLTAGE_CA as voltageCa, CURRENT_A as currentA, CURRENT_B as currentB, CURRENT_C as currentC, ACTIVE_POWER as activePower, REACTIVE_POWER as reactivePower, APARENT_POWER as aparentPower, POWER_FACTOR as powerFactor, DATETIME as utcDateTime`
     return dql("energy", `SELECT ENERGY_INSTANT / 1000 as energyInstantMwh, ENERGY_CUMMULATIVE / 1000 as energyCummulativeMwh, VOLTAGE_AB as voltageAb, VOLTAGE_BC as voltageBc, VOLTAGE_CA as voltageCa, CURRENT_A as currentA, CURRENT_B as currentB, CURRENT_C as currentC, ACTIVE_POWER as activePower, REACTIVE_POWER as reactivePower, APARENT_POWER as aparentPower, POWER_FACTOR as powerFactor, DATETIME as utcDateTime from drex.energy where device_id = '${deviceId}' ORDER BY datetime`);
-
-
 }
 
 export {
@@ -119,5 +131,6 @@ export {
     send_energy_data,
     get_last_energy_by_device_id,
     get_energy_by_device_id,
+    save_recs_historical,
     generateGraphicByDeviceIdAndTime
 }
