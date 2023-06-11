@@ -73,9 +73,9 @@ async function get_rec_by_owner_name(ownerName) {
     return dql("recs", `SELECT * FROM drex.recs WHERE owner_name = '${ownerName}'`);
 }
 
-async function generateGraphicByDeviceLabelAndTime(deviceLabel, time) {
+async function generateGraphicByDeviceIdAndTime(device_id, time) {
     await auth();
-    return dql("recs", `SELECT DATE_TRUNC(${time}, timestamp) AT TIME ZONE 'UTC' AS utc_date_time, MAX(energy_instant) AS energy FROM energy WHERE device_id = ${deviceLabel} GROUP BY utc_date_time ORDER BY utc_date_time`);
+    return dql("energy", `SELECT DATE_TRUNC('${time}', datetime) AS x, MAX(energy_instant / 1000) AS y FROM drex.energy WHERE device_id = ${device_id} GROUP BY x ORDER BY x`);
 }
 
 async function send_energy_data(body) {
@@ -107,6 +107,8 @@ async function get_last_energy_by_device_id(deviceId) {
 async function get_energy_by_device_id(deviceId) {
     await auth();
     return dql("energy", `SELECT * from drex.energy where device_id = '${deviceId}' ORDER BY datetime`);
+
+
 }
 
 export {
@@ -116,5 +118,5 @@ export {
     send_energy_data,
     get_last_energy_by_device_id,
     get_energy_by_device_id,
-    generateGraphicByDeviceLabelAndTime
+    generateGraphicByDeviceIdAndTime
 }

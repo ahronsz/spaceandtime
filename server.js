@@ -7,7 +7,7 @@ import {
     send_energy_data,
     get_last_energy_by_device_id,
     get_energy_by_device_id,
-    generateGraphicByDeviceLabelAndTime
+    generateGraphicByDeviceIdAndTime
 } from './src/sxt.js';
 
 const app = express();
@@ -66,7 +66,7 @@ app.get('/energy/:deviceId', async (req, res) => {
 
 app.get('/energy/:deviceId/last', async (req, res) => {
     try {
-        const energy = await get_last_energy_by_device_id(req.params.deviceId);
+        const energy = await get_last_energy_by_device_id(req.params.deviceId)
         res.send(energy[0]);
         console.info("Data obtained satisfactorily");
     } catch (error) {
@@ -75,11 +75,11 @@ app.get('/energy/:deviceId/last', async (req, res) => {
     }
 });
 
-app.get('/energy/:deviceLabel/graphic?time=:time', async (req, res) => {
+app.get('/energy/:deviceId/graphic', async (req, res) => {
     try {
-        const deviceLabel = req.params.deviceLabel;
-        const time = req.params.time;
-        const recs = await generateGraphicByDeviceLabelAndTime(deviceLabel, time);
+        const deviceId = req.params.deviceId;
+        const time = req.query.time;
+        const recs = await generateGraphicByDeviceIdAndTime(deviceId, time);
         res.send(recs);
         console.info("Data obtained satisfactorily");
     } catch (error) {
