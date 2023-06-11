@@ -75,7 +75,7 @@ async function get_rec_by_owner_name(ownerName) {
 
 async function generateGraphicByDeviceIdAndTime(device_id, time) {
     await auth();
-    return dql("energy", `SELECT DATE_TRUNC('${time}', datetime) AS x, MAX(energy_instant) AS y FROM drex.energy WHERE device_id = ${device_id} GROUP BY x ORDER BY x`);
+    return dql("energy", `SELECT DATE_TRUNC('${time}', datetime) AS x, MAX(energy_instant / 1000) AS y FROM drex.energy WHERE device_id = ${device_id} GROUP BY x ORDER BY x`);
 }
 
 async function send_energy_data(body) {
@@ -101,12 +101,13 @@ async function send_energy_data(body) {
 
 async function get_last_energy_by_device_id(deviceId) {
     await auth();
-    return dql("energy", `SELECT * FROM drex.energy WHERE device_id = ${deviceId} ORDER BY datetime DESC LIMIT 1`);
+    return dql("energy", `SELECT ENERGY_INSTANT / 1000 as energyInstantMwh, ENERGY_CUMMULATIVE / 1000 as energyCummulativeMwh, VOLTAGE_AB as voltageAb, VOLTAGE_BC as voltageBc, VOLTAGE_CA as voltageCa, CURRENT_A as currentA, CURRENT_B as currentB, CURRENT_C as currentC, ACTIVE_POWER as activePower, REACTIVE_POWER as reactivePower, APARENT_POWER as aparentPower, POWER_FACTOR as powerFactor, DATETIME as utcDateTime FROM drex.energy WHERE device_id = ${deviceId} ORDER BY datetime DESC LIMIT 1`);
 }
 
 async function get_energy_by_device_id(deviceId) {
     await auth();
-    return dql("energy", `SELECT * from drex.energy where device_id = '${deviceId}' ORDER BY datetime`);
+    //`ENERGY_INSTANT / 1000 as energyInstantMwh, ENERGY_CUMMULATIVE / 1000 as energyCummulativeMwh, VOLTAGE_AB as voltageAb, VOLTAGE_BC as voltageBc, VOLTAGE_CA as voltageCa, CURRENT_A as currentA, CURRENT_B as currentB, CURRENT_C as currentC, ACTIVE_POWER as activePower, REACTIVE_POWER as reactivePower, APARENT_POWER as aparentPower, POWER_FACTOR as powerFactor, DATETIME as utcDateTime`
+    return dql("energy", `SELECT ENERGY_INSTANT / 1000 as energyInstantMwh, ENERGY_CUMMULATIVE / 1000 as energyCummulativeMwh, VOLTAGE_AB as voltageAb, VOLTAGE_BC as voltageBc, VOLTAGE_CA as voltageCa, CURRENT_A as currentA, CURRENT_B as currentB, CURRENT_C as currentC, ACTIVE_POWER as activePower, REACTIVE_POWER as reactivePower, APARENT_POWER as aparentPower, POWER_FACTOR as powerFactor, DATETIME as utcDateTime from drex.energy where device_id = '${deviceId}' ORDER BY datetime`);
 
 
 }
