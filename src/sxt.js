@@ -75,7 +75,7 @@ async function get_rec_by_owner_name(ownerName) {
 
 async function generateGraphicByDeviceIdAndTime(device_id, time) {
     await auth();
-    return dql("energy", `SELECT DATE_TRUNC('${time}', datetime) AS x, MAX(energy_instant / 1000) AS y FROM drex.energy WHERE device_id = ${device_id} GROUP BY x ORDER BY x`);
+    return dql("energy", `SELECT DATE_TRUNC('${time}', datetime) AS x, MAX(energy_instant) AS y FROM drex.energy WHERE device_id = ${device_id} GROUP BY x ORDER BY x`);
 }
 
 async function send_energy_data(body) {
