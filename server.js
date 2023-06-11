@@ -4,6 +4,7 @@ import {
     get_last_recs_historical,
     get_rec_by_owner_name,
     get_recs_historical,
+    send_energy_data,
     generateGraphicByDeviceLabelAndTime
 } from './src/sxt.js';
 
@@ -11,6 +12,7 @@ const app = express();
 const port = 5000;
 
 app.use(cors());
+app.use(express.json());
 
 app.get('/recs-historical/last', async (req, res) => {
     try {
@@ -44,6 +46,14 @@ app.get('/recs/:ownerName', async (req, res) => {
         console.error(error);
         res.status(500).send('There was an error getting the logs.');
     }
+});
+
+app.post('/energy', async (req, res) => {
+    const data = req.body;
+    console.log(data);
+    const recs = await send_energy_data(data);
+    res.send(recs);
+    console.info("Data send satisfactorily");
 });
 
 app.get('/energy/:deviceLabel/graphic?time=:time', async (req, res) => {
