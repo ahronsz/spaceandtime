@@ -80,8 +80,12 @@ app.get('/energy/:deviceId/graphic', async (req, res) => {
     try {
         const deviceId = req.params.deviceId;
         const time = req.query.time;
-        const recs = await generateGraphicByDeviceIdAndTime(deviceId, time);
-        res.send(recs);
+        const energy = await generateGraphicByDeviceIdAndTime(deviceId, time);
+        let newData = energy.map(item => ({
+            x: { utcDateTime: item.X.split(".")[0] },
+            y: { energyMwh: item.Y }
+        }));
+        res.send(newData);
         console.info("Data obtained satisfactorily");
     } catch (error) {
         console.error(error);
